@@ -49,7 +49,7 @@ func (p *parser) currentKey() string {
 }
 
 func (p *parser) addValue(v ConfigValue) {
-	p.config.values[p.currentKey()] = v
+	p.config.addValue(p.currentKey(), v)
 }
 
 func (p *parser) popKey() {

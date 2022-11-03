@@ -22,6 +22,11 @@ func (c Config) Get(key string) (ConfigValue, bool) {
 	return nil, false
 }
 
+func (c Config) addValue(key string, v ConfigValue) {
+	// TODO: Want to handle defaults and overrides, so we don't ultimately want this simple map
+	c.values[key] = v
+}
+
 type ConfigValueType int
 
 const (
