@@ -1,4 +1,4 @@
-module github.com/dumpsterfireproject/hocon
+module github.com/dumpsterfireproject/gocon
 
 go 1.19
 

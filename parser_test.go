@@ -1,4 +1,4 @@
-package hocon
+package gocon
 
 import (
 	"strings"
@@ -6,6 +6,29 @@ import (
 
 	"github.com/matryer/is"
 )
+
+/* TODO:
+https://github.com/lightbend/config/blob/main/HOCON.md#unquoted-strings
+----
+{
+    "foo" : { "a" : 42 },
+    "foo" : { "b" : 43 }
+}
+should equal
+{
+    "foo" : { "a" : 42, "b" : 43 }
+}
+----
+{
+    "foo" : { "a" : 42 },
+    "foo" : null,
+    "foo" : { "b" : 43 }
+}
+should equal
+{
+    "foo" : { "b" : 43 }
+}
+*/
 
 func TestParse(t *testing.T) {
 	t.Run("parse a config with a single value", testParse_SingleValue)

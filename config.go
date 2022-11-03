@@ -1,4 +1,4 @@
-package hocon
+package gocon
 
 type Config struct {
 	values map[string]ConfigValue
@@ -36,8 +36,10 @@ const (
 	ConfigBooleanType
 	ConfigArrayType
 	ConfigNullType
+	// maybe configUnresolvedValueType as a placeholder which holds multiple values until resolved?
 )
 
+// need to track position, for error purposed and also for resolving
 type ConfigValue interface {
 	Type() ConfigValueType
 	String() string
