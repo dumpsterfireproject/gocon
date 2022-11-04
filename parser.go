@@ -155,7 +155,7 @@ func (p *parser) parseValue() {
 	case scanner.Float:
 		fallthrough
 	case scanner.Char:
-		p.addValue(NewConfigString(p.scanner.TokenText()))
+		p.addValue(newConfigUnresolvedValue(p.scanner.TokenText()))
 		p.popKey()
 	default:
 	}
@@ -163,7 +163,7 @@ func (p *parser) parseValue() {
 
 func (p *parser) parseVariable() {
 	variable := "$"
-	isEnd := false
+loop:
 	for {
 		r := p.next()
 		switch r {
@@ -175,16 +175,13 @@ func (p *parser) parseVariable() {
 			// handle errors, like these tokens are out of order
 			variable = fmt.Sprintf("%s%s", variable, p.scanner.TokenText())
 		case objectEndToken:
-			isEnd = true
 			variable = fmt.Sprintf("%s%s", variable, p.scanner.TokenText())
+			break loop
 		default:
-			isEnd = true
-		}
-		if isEnd {
-			break
+			break loop
 		}
 	}
-	p.addValue(NewConfigString(variable))
+	p.addValue(newConfigUnresolvedValue(variable))
 	p.popKey()
 }
 
@@ -196,8 +193,18 @@ func (p *parser) parseInclude() {
 
 }
 
+// this is for a single line comment, starting with # - parse through the EOL
 func (p *parser) parseComment() {
-
+loop:
+	for {
+		r := p.next()
+		switch r {
+		case '\n':
+			break loop
+		case scanner.EOF:
+			break loop
+		}
+	}
 }
 
 func (p *parser) parseArray() {

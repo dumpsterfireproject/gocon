@@ -33,6 +33,7 @@ should equal
 func TestParse(t *testing.T) {
 	t.Run("parse a config with a single value", testParse_SingleValue)
 	t.Run("parse a config with a single value as an environment variable", testParse_SingleValueEnvironmentVariable)
+	t.Run("single line comments", testParse_SingleLineComment)
 }
 
 func testParse_SingleValue(t *testing.T) {
@@ -57,4 +58,27 @@ func testParse_SingleValueEnvironmentVariable(t *testing.T) {
 	value, isFound := c.Get("foo")
 	is.True(isFound)
 	is.Equal(value.String(), "${MYAPP_HOME}")
+}
+
+func testParse_SingleLineComment(t *testing.T) {
+	is := is.NewRelaxed(t)
+	input := strings.NewReader(
+		`a = foo #this is a comment
+		 b = bar#this is a comment
+		 c = 1`)
+
+	c, err := Parse(input)
+	is.NoErr(err)
+
+	value, isFound := c.Get("a")
+	is.True(isFound)
+	is.Equal(value.String(), "foo")
+
+	value, isFound = c.Get("b")
+	is.True(isFound)
+	is.Equal(value.String(), "bar")
+
+	value, isFound = c.Get("c")
+	is.True(isFound)
+	is.Equal(value.String(), "1")
 }

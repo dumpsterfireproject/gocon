@@ -36,7 +36,7 @@ const (
 	ConfigBooleanType
 	ConfigArrayType
 	ConfigNullType
-	// maybe configUnresolvedValueType as a placeholder which holds multiple values until resolved?
+	configUnresolvedValueType // holds multiple values until resolved
 )
 
 // need to track position, for error purposed and also for resolving
@@ -45,17 +45,36 @@ type ConfigValue interface {
 	String() string
 }
 
-type ConfigString struct {
-	value string
+type configUnresolvedValue struct {
+	value []string
 }
 
-func NewConfigString(value string) ConfigString {
-	return ConfigString{value: value}
+func newConfigUnresolvedValue(value string) configUnresolvedValue {
+	return configUnresolvedValue{value: []string{value}}
 }
 
-func (c ConfigString) Type() ConfigValueType {
-	return ConfigStringType
+func (c configUnresolvedValue) Type() ConfigValueType {
+	return configUnresolvedValueType
 }
-func (c ConfigString) String() string {
-	return c.value
+
+func (c configUnresolvedValue) String() string {
+	if len(c.value) > 0 {
+		return c.value[len(c.value)-1]
+	}
+	return ""
 }
+
+func (c configUnresolvedValue) addValue(v string) {
+	c.value = append(c.value, v)
+}
+
+// type ConfigString struct {
+// 	value string
+// }
+
+// func (c ConfigString) Type() ConfigValueType {
+// 	return ConfigStringType
+// }
+// func (c ConfigString) String() string {
+// 	return c.value
+// }
