@@ -10,10 +10,10 @@ func NewConfig() Config {
 	}
 }
 
-// return a new config with all variables resolved
-func (c Config) Resolve() (Config, error) {
-	return c, nil
-}
+// // return a new config with all variables resolved
+// func (c Config) Resolve() (Config, error) {
+// 	return c, nil
+// }
 
 func (c Config) Get(key string) (ConfigValue, bool) {
 	if val, ok := c.values[key]; ok {
@@ -43,29 +43,6 @@ const (
 type ConfigValue interface {
 	Type() ConfigValueType
 	String() string
-}
-
-type configUnresolvedValue struct {
-	value []string
-}
-
-func newConfigUnresolvedValue(value string) configUnresolvedValue {
-	return configUnresolvedValue{value: []string{value}}
-}
-
-func (c configUnresolvedValue) Type() ConfigValueType {
-	return configUnresolvedValueType
-}
-
-func (c configUnresolvedValue) String() string {
-	if len(c.value) > 0 {
-		return c.value[len(c.value)-1]
-	}
-	return ""
-}
-
-func (c configUnresolvedValue) addValue(v string) {
-	c.value = append(c.value, v)
 }
 
 // type ConfigString struct {
